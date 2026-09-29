@@ -1,53 +1,55 @@
 import { videoTypes } from '../../data/clients';
 
-// Repeat items for seamless continuous marquee loop
-const marqueeItems = [...videoTypes, ...videoTypes, ...videoTypes];
+const track = [...videoTypes, ...videoTypes, ...videoTypes];
 
 export default function TrustedMarquee() {
   return (
     <section
-      className="section-padding py-14 md:py-20 overflow-hidden"
+      className="overflow-hidden"
+      style={{ paddingTop: 'clamp(32px, 5vw, 64px)', paddingBottom: 'clamp(32px, 5vw, 64px)', borderTop: '1px solid rgba(255,255,255,0.07)' }}
       aria-label="Video formats and editing services"
     >
-      <div className="section-container mb-8 md:mb-12">
-        <p className="text-eyebrow mb-3 text-white/50 tracking-widest uppercase font-mono text-xs">
-          EXPERTISE & FORMATS
-        </p>
-        <h2
-          className="font-sans font-light tracking-tight"
-          style={{
-            fontSize: 'clamp(28px, 4vw, 48px)',
-            letterSpacing: '-0.03em',
-            lineHeight: 1.15,
-            color: 'var(--text-primary)',
-          }}
-        >
-          Specialized in editing <br />
-          <span className="font-serif italic text-white/60">
-            high-performance content formats.
-          </span>
-        </h2>
+      {/* SECTION HEADER */}
+      <div className="section-container mb-10 md:mb-14">
+        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+          <div>
+            <p className="text-[11px] font-mono tracking-[0.2em] text-white/40 uppercase mb-2">Expertise & Formats</p>
+            <h2
+              className="font-sans font-light"
+              style={{ fontSize: 'clamp(24px, 3.5vw, 42px)', letterSpacing: '-0.03em', lineHeight: 1.1, color: 'var(--text-primary)' }}
+            >
+              Every format.{' '}
+              <span className="font-serif italic" style={{ color: 'var(--text-secondary)' }}>
+                Every platform.
+              </span>
+            </h2>
+          </div>
+          <p className="text-sm text-white/40 font-sans max-w-xs leading-relaxed">
+            From long-form podcasts to viral shorts — built for retention.
+          </p>
+        </div>
       </div>
 
       {/* SINGLE MARQUEE ROW */}
-      <div className="marquee-fade overflow-hidden relative py-4" aria-hidden="true">
-        <div className="marquee-track flex gap-4 md:gap-6 items-center">
-          {marqueeItems.map((item, i) => (
+      <div
+        className="overflow-hidden"
+        style={{
+          WebkitMaskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)',
+          maskImage: 'linear-gradient(to right, transparent 0%, black 8%, black 92%, transparent 100%)',
+        }}
+      >
+        <div
+          className="flex gap-3"
+          style={{ animation: 'marquee-left 28s linear infinite', width: 'max-content', padding: '8px 0' }}
+        >
+          {track.map((item, i) => (
             <div
-              key={`type-${i}`}
-              className="group flex items-center gap-3.5 px-6 py-3.5 rounded-full bg-[#131418] border border-white/15 hover:border-white/40 hover:bg-[#1a1b22] transition-all duration-300 flex-shrink-0 shadow-lg"
+              key={`t-${i}`}
+              className="flex-shrink-0 flex items-center gap-2.5 px-5 py-2.5 rounded-full border border-white/10 bg-white/[0.03]"
+              style={{ whiteSpace: 'nowrap' }}
             >
-              <div className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center text-sm">
-                {item.icon}
-              </div>
-              <div className="flex items-center gap-3">
-                <span className="font-sans font-semibold text-sm md:text-base text-white tracking-tight">
-                  {item.name}
-                </span>
-                <span className="text-[11px] text-emerald-400/90 font-mono tracking-wider uppercase bg-emerald-500/10 border border-emerald-500/20 px-2.5 py-0.5 rounded-full">
-                  {item.category}
-                </span>
-              </div>
+              <span className="text-base leading-none">{item.icon}</span>
+              <span className="font-sans font-medium text-sm text-white/90 tracking-tight">{item.name}</span>
             </div>
           ))}
         </div>

@@ -97,7 +97,7 @@ export default function Metrics() {
       <div className="section-container">
         <div
           className="grid grid-cols-1 md:grid-cols-3 gap-12 md:gap-6"
-          style={{ borderBottom: '1px solid var(--border-subtle)', paddingBottom: 'clamp(60px, 8vw, 120px)' }}
+          style={{ borderBottom: '1px solid var(--border-subtle)', paddingBottom: 'clamp(32px, 5vw, 64px)' }}
         >
           {metrics.map((m, i) => (
             <div

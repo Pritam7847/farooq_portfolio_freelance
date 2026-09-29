@@ -139,8 +139,16 @@ body.menu-open {
 }
 
 .section-padding {
-  padding-top: clamp(80px, 12vw, 160px);
-  padding-bottom: clamp(80px, 12vw, 160px);
+  padding-top: clamp(48px, 7vw, 96px);
+  padding-bottom: clamp(48px, 7vw, 96px);
+}
+
+/* =============================================
+   MARQUEE ANIMATION
+   ============================================= */
+@keyframes marquee-left {
+  0%   { transform: translateX(0); }
+  100% { transform: translateX(-33.333%); }
 }
 
 /* =============================================
