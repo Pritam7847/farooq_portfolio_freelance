@@ -6,17 +6,24 @@ import { useReducedMotion } from '../../hooks/useReducedMotion';
 
 gsap.registerPlugin(ScrollTrigger);
 
-// Fan card configurations
+// Fan card configurations for 3 videos
 const cardConfigs = [
-  { rotate: -18, x: -280, y: 30, scale: 0.82, zIndex: 1 },
-  { rotate: -9,  x: -140, y: 10, scale: 0.9,  zIndex: 2 },
+  { rotate: -12, x: -180, y: 15, scale: 0.88, zIndex: 2 },
   { rotate: 0,   x: 0,    y: 0,  scale: 1,    zIndex: 5 },
-  { rotate: 9,   x: 140,  y: 10, scale: 0.9,  zIndex: 2 },
-  { rotate: 18,  x: 280,  y: 30, scale: 0.82, zIndex: 1 },
+  { rotate: 12,  x: 180,  y: 15, scale: 0.88, zIndex: 2 },
 ];
 
-function ShortCard({ short, config, index, isCenter, onHover, isHovered, isAnyHovered }) {
+function ShortCard({ short, config, index, isCenter, onHover, isHovered, isAnyHovered, onOpenModal }) {
   const cardRef = useRef(null);
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.play().catch(() => {
+        // Autoplay policy fallback
+      });
+    }
+  }, []);
 
   const opacity = isAnyHovered
     ? isHovered ? 1 : 0.4
@@ -27,7 +34,7 @@ function ShortCard({ short, config, index, isCenter, onHover, isHovered, isAnyHo
       ref={cardRef}
       className="short-card"
       data-index={index}
-      onClick={() => onHover(isHovered ? null : index)}
+      onClick={() => onOpenModal(short)}
       onMouseEnter={() => onHover(index)}
       onMouseLeave={() => onHover(null)}
       style={{
@@ -36,23 +43,46 @@ function ShortCard({ short, config, index, isCenter, onHover, isHovered, isAnyHo
         height: 'clamp(240px, 32vw, 400px)',
         borderRadius: '16px',
         overflow: 'hidden',
-        border: '1px solid rgba(255,255,255,0.1)',
-        boxShadow: isCenter ? '0 40px 80px rgba(0,0,0,0.7)' : '0 20px 40px rgba(0,0,0,0.5)',
+        border: isHovered ? '1px solid rgba(255,255,255,0.3)' : '1px solid rgba(255,255,255,0.1)',
+        boxShadow: isHovered
+          ? '0 30px 60px rgba(0,0,0,0.8), 0 0 30px rgba(255,255,255,0.1)'
+          : isCenter
+            ? '0 40px 80px rgba(0,0,0,0.7)'
+            : '0 20px 40px rgba(0,0,0,0.5)',
         transform: `translateX(${config.x}px) translateY(${config.y}px) rotate(${config.rotate}deg) scale(${isHovered ? 1.05 : config.scale})`,
         zIndex: isHovered ? 10 : config.zIndex,
         opacity,
-        transition: 'transform 0.6s cubic-bezier(0.16,1,0.3,1), opacity 0.4s ease, box-shadow 0.4s ease',
+        transition: 'transform 0.6s cubic-bezier(0.16,1,0.3,1), opacity 0.4s ease, box-shadow 0.4s ease, border-color 0.4s ease',
         cursor: 'pointer',
         flexShrink: 0,
       }}
-      aria-label={`Short: ${short.title}`}
+      aria-label={`Play Short: ${short.title}`}
     >
-      <img
-        src={short.thumbnail}
-        alt={short.title}
-        loading="lazy"
-        style={{ width: '100%', height: '100%', objectFit: 'cover', pointerEvents: 'none' }}
-      />
+      {short.video ? (
+        <video
+          ref={videoRef}
+          src={short.video}
+          poster={short.thumbnail}
+          autoPlay
+          loop
+          muted
+          playsInline
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            pointerEvents: 'none',
+            display: 'block',
+          }}
+        />
+      ) : (
+        <img
+          src={short.thumbnail}
+          alt={short.title}
+          loading="lazy"
+          style={{ width: '100%', height: '100%', objectFit: 'cover', pointerEvents: 'none' }}
+        />
+      )}
 
       {/* Gradient overlay */}
       <div
@@ -60,8 +90,42 @@ function ShortCard({ short, config, index, isCenter, onHover, isHovered, isAnyHo
           position: 'absolute',
           inset: 0,
           background: 'linear-gradient(to top, rgba(0,0,0,0.85) 0%, rgba(0,0,0,0.2) 50%, transparent 80%)',
+          pointerEvents: 'none',
         }}
       />
+
+      {/* Play Icon overlay on hover */}
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          opacity: isHovered ? 1 : 0,
+          transition: 'opacity 0.3s ease',
+          pointerEvents: 'none',
+        }}
+      >
+        <div
+          style={{
+            width: '48px',
+            height: '48px',
+            borderRadius: '50%',
+            background: 'rgba(255,255,255,0.25)',
+            backdropFilter: 'blur(10px)',
+            border: '1px solid rgba(255,255,255,0.4)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            boxShadow: '0 8px 24px rgba(0,0,0,0.4)',
+          }}
+        >
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="white" style={{ marginLeft: '2px' }}>
+            <polygon points="5 3 19 12 5 21 5 3" />
+          </svg>
+        </div>
+      </div>
 
       {/* Meta */}
       <div
@@ -73,6 +137,7 @@ function ShortCard({ short, config, index, isCenter, onHover, isHovered, isAnyHo
           padding: '16px',
           transform: `rotate(-${config.rotate}deg)`,
           transition: 'transform 0.6s cubic-bezier(0.16,1,0.3,1)',
+          pointerEvents: 'none',
         }}
       >
         <p
@@ -87,8 +152,8 @@ function ShortCard({ short, config, index, isCenter, onHover, isHovered, isAnyHo
         >
           {short.title}
         </p>
-        <p className="text-eyebrow" style={{ color: 'rgba(255,255,255,0.4)', fontSize: '9px' }}>
-          {short.views} views
+        <p className="text-eyebrow" style={{ color: 'rgba(255,255,255,0.5)', fontSize: '9px' }}>
+          {short.views} views • {short.client || 'Short'}
         </p>
       </div>
 
@@ -110,6 +175,7 @@ function ShortCard({ short, config, index, isCenter, onHover, isHovered, isAnyHo
             letterSpacing: '0.1em',
             textTransform: 'uppercase',
             color: 'white',
+            pointerEvents: 'none',
           }}
         >
           Featured
@@ -119,10 +185,234 @@ function ShortCard({ short, config, index, isCenter, onHover, isHovered, isAnyHo
   );
 }
 
+// Modal component for viewing short video with sound & controls
+function VideoModal({ short, onClose }) {
+  const modalVideoRef = useRef(null);
+  const [isPlaying, setIsPlaying] = useState(true);
+  const [isMuted, setIsMuted] = useState(false);
+
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape') onClose();
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [onClose]);
+
+  useEffect(() => {
+    if (modalVideoRef.current) {
+      modalVideoRef.current.muted = isMuted;
+      modalVideoRef.current.play().catch(() => {
+        setIsMuted(true);
+      });
+    }
+  }, [short, isMuted]);
+
+  const togglePlay = (e) => {
+    e.stopPropagation();
+    if (modalVideoRef.current) {
+      if (isPlaying) {
+        modalVideoRef.current.pause();
+        setIsPlaying(false);
+      } else {
+        modalVideoRef.current.play();
+        setIsPlaying(true);
+      }
+    }
+  };
+
+  const toggleMute = (e) => {
+    e.stopPropagation();
+    if (modalVideoRef.current) {
+      const nextMute = !isMuted;
+      modalVideoRef.current.muted = nextMute;
+      setIsMuted(nextMute);
+    }
+  };
+
+  if (!short) return null;
+
+  return (
+    <div
+      onClick={onClose}
+      style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 9999,
+        background: 'rgba(0, 0, 0, 0.85)',
+        backdropFilter: 'blur(20px)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '24px',
+        animation: 'fadeIn 0.3s ease-out',
+      }}
+    >
+      <div
+        onClick={(e) => e.stopPropagation()}
+        style={{
+          position: 'relative',
+          width: '100%',
+          maxWidth: '380px',
+          height: 'min(82vh, 680px)',
+          borderRadius: '24px',
+          overflow: 'hidden',
+          background: '#09090b',
+          border: '1px solid rgba(255,255,255,0.15)',
+          boxShadow: '0 50px 100px rgba(0,0,0,0.9), 0 0 40px rgba(255,255,255,0.05)',
+          display: 'flex',
+          flexDirection: 'column',
+        }}
+      >
+        {/* Close Button */}
+        <button
+          onClick={onClose}
+          aria-label="Close video"
+          style={{
+            position: 'absolute',
+            top: '16px',
+            right: '16px',
+            zIndex: 20,
+            width: '36px',
+            height: '36px',
+            borderRadius: '50%',
+            background: 'rgba(0,0,0,0.5)',
+            backdropFilter: 'blur(8px)',
+            border: '1px solid rgba(255,255,255,0.2)',
+            color: 'white',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            cursor: 'pointer',
+            fontSize: '16px',
+            transition: 'background 0.2s ease',
+          }}
+        >
+          ✕
+        </button>
+
+        {/* Video container */}
+        <div style={{ position: 'relative', width: '100%', height: '100%', background: '#000' }}>
+          {short.video ? (
+            <video
+              ref={modalVideoRef}
+              src={short.video}
+              poster={short.thumbnail}
+              autoPlay
+              loop
+              playsInline
+              muted={isMuted}
+              onClick={togglePlay}
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                cursor: 'pointer',
+              }}
+            />
+          ) : (
+            <img
+              src={short.thumbnail}
+              alt={short.title}
+              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+            />
+          )}
+
+          {/* Overlay controls */}
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background: 'linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 40%, rgba(0,0,0,0.4) 100%)',
+              pointerEvents: 'none',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              padding: '20px',
+            }}
+          >
+            {/* Top info */}
+            <div>
+              <span
+                style={{
+                  fontSize: '10px',
+                  letterSpacing: '0.12em',
+                  textTransform: 'uppercase',
+                  color: 'rgba(255,255,255,0.6)',
+                }}
+              >
+                {short.client || 'Reels / Short'}
+              </span>
+            </div>
+
+            {/* Bottom info & controls */}
+            <div style={{ pointerEvents: 'auto' }}>
+              <h3
+                className="font-sans font-light text-white mb-1"
+                style={{ fontSize: '18px', letterSpacing: '-0.02em', lineHeight: 1.2 }}
+              >
+                {short.title}
+              </h3>
+              <p className="text-eyebrow mb-4" style={{ color: 'rgba(255,255,255,0.5)', fontSize: '11px' }}>
+                {short.views} views • Loop playback
+              </p>
+
+              <div className="flex items-center gap-3">
+                {/* Play / Pause button */}
+                <button
+                  onClick={togglePlay}
+                  style={{
+                    padding: '8px 16px',
+                    borderRadius: '100px',
+                    background: 'rgba(255,255,255,0.15)',
+                    backdropFilter: 'blur(10px)',
+                    border: '1px solid rgba(255,255,255,0.25)',
+                    color: 'white',
+                    fontSize: '12px',
+                    fontFamily: 'var(--font-sans)',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                  }}
+                >
+                  {isPlaying ? '⏸ Pause' : '▶ Play'}
+                </button>
+
+                {/* Mute / Unmute button */}
+                <button
+                  onClick={toggleMute}
+                  style={{
+                    padding: '8px 16px',
+                    borderRadius: '100px',
+                    background: isMuted ? 'rgba(255,255,255,0.15)' : 'rgba(255,255,255,0.3)',
+                    backdropFilter: 'blur(10px)',
+                    border: '1px solid rgba(255,255,255,0.25)',
+                    color: 'white',
+                    fontSize: '12px',
+                    fontFamily: 'var(--font-sans)',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                  }}
+                >
+                  {isMuted ? '🔇 Unmute' : '🔊 Sound On'}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Shorts() {
   const sectionRef = useRef(null);
   const fanRef = useRef(null);
   const [hoveredIndex, setHoveredIndex] = useState(null);
+  const [activeModalShort, setActiveModalShort] = useState(null);
   const reducedMotion = useReducedMotion();
 
   useEffect(() => {
@@ -244,12 +534,13 @@ export default function Shorts() {
               <ShortCard
                 key={short.id}
                 short={short}
-                config={reducedMotion ? { rotate: 0, x: (i - 2) * 150, y: 0, scale: 1, zIndex: i } : cardConfigs[i]}
+                config={reducedMotion ? { rotate: 0, x: (i - 1) * 180, y: 0, scale: 1, zIndex: i } : cardConfigs[i]}
                 index={i}
-                isCenter={i === 2}
+                isCenter={i === 1}
                 onHover={setHoveredIndex}
                 isHovered={hoveredIndex === i}
                 isAnyHovered={hoveredIndex !== null}
+                onOpenModal={setActiveModalShort}
               />
             ))}
           </div>
@@ -277,6 +568,12 @@ export default function Shorts() {
           ))}
         </div>
       </div>
+
+      {/* Video Modal Player */}
+      {activeModalShort && (
+        <VideoModal short={activeModalShort} onClose={() => setActiveModalShort(null)} />
+      )}
     </section>
   );
 }
+

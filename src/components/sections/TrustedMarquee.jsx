@@ -11,8 +11,7 @@ export default function TrustedMarquee() {
     >
       {/* SECTION HEADER */}
       <div className="section-container mb-10 md:mb-14">
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
-          <div>
+        <div className="flex flex-col items-center text-center gap-3">
             <p className="text-[11px] font-mono tracking-[0.2em] text-white/40 uppercase mb-2">Expertise & Formats</p>
             <h2
               className="font-sans font-light"
@@ -23,10 +22,6 @@ export default function TrustedMarquee() {
                 Every platform.
               </span>
             </h2>
-          </div>
-          <p className="text-sm text-white/40 font-sans max-w-xs leading-relaxed">
-            From long-form podcasts to viral shorts — built for retention.
-          </p>
         </div>
       </div>
 

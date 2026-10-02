@@ -6,7 +6,7 @@ import { useReducedMotion } from '../../hooks/useReducedMotion';
 
 gsap.registerPlugin(ScrollTrigger);
 
-function VideoCard({ project, index, large = false }) {
+function VideoCard({ project, index }) {
   const cardRef = useRef(null);
   const imgRef = useRef(null);
   const reducedMotion = useReducedMotion();
@@ -30,23 +30,6 @@ function VideoCard({ project, index, large = false }) {
           },
         }
       );
-
-      // Image scale on scroll
-      if (imgRef.current) {
-        gsap.fromTo(imgRef.current,
-          { scale: 1.08 },
-          {
-            scale: 1,
-            ease: 'none',
-            scrollTrigger: {
-              trigger: cardRef.current,
-              start: 'top bottom',
-              end: 'bottom top',
-              scrub: 0.8,
-            },
-          }
-        );
-      }
     }, cardRef);
 
     return () => ctx.revert();
@@ -83,28 +66,46 @@ function VideoCard({ project, index, large = false }) {
       className="video-card"
       style={{
         opacity: reducedMotion ? 1 : 0,
-        height: large
-          ? 'clamp(320px, 40vw, 560px)'
-          : 'clamp(200px, 25vw, 340px)',
+        height: 'clamp(360px, 45vw, 540px)',
+        borderRadius: '16px',
         overflow: 'hidden',
+        border: '1px solid rgba(255,255,255,0.1)',
+        boxShadow: '0 20px 40px rgba(0,0,0,0.5)',
       }}
       onMouseEnter={handleMouseEnter}
       onMouseLeave={handleMouseLeave}
     >
       <div className="vcard-inner" style={{ width: '100%', height: '100%', overflow: 'hidden', borderRadius: 'inherit' }}>
-        <img
-          ref={imgRef}
-          src={project.thumbnail}
-          alt={project.title}
-          loading="lazy"
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-            display: 'block',
-            transformOrigin: 'center center',
-          }}
-        />
+        {project.video ? (
+          <video
+            src={project.video}
+            poster={project.thumbnail}
+            autoPlay
+            loop
+            muted
+            playsInline
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              display: 'block',
+            }}
+          />
+        ) : (
+          <img
+            ref={imgRef}
+            src={project.thumbnail}
+            alt={project.title}
+            loading="lazy"
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              display: 'block',
+              transformOrigin: 'center center',
+            }}
+          />
+        )}
       </div>
 
       {/* Overlay */}
@@ -175,21 +176,19 @@ export default function LongForm() {
     return () => ctx.revert();
   }, [reducedMotion]);
 
-  const [featured, ...rest] = projects;
-
   return (
     <section
       ref={sectionRef}
       id="longform"
       className="section-padding"
       style={{ borderTop: '1px solid var(--border-subtle)' }}
-      aria-label="Long form work"
+      aria-label="Selected Work"
     >
       <div className="section-container">
         {/* Header */}
         <div className="longform-heading flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 md:mb-16" style={{ opacity: reducedMotion ? 1 : 0 }}>
           <div>
-            <p className="text-eyebrow mb-4">Selected long form</p>
+            <p className="text-eyebrow mb-4">Selected Work</p>
             <h2
               className="font-sans font-light"
               style={{
@@ -213,15 +212,10 @@ export default function LongForm() {
           </a>
         </div>
 
-        {/* Featured large card */}
-        <div className="mb-4 md:mb-5">
-          <VideoCard project={featured} index={0} large />
-        </div>
-
-        {/* Grid of smaller cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5">
-          {rest.map((project, i) => (
-            <VideoCard key={project.id} project={project} index={i + 1} />
+        {/* Vertical 3-card grid */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8">
+          {projects.map((project, i) => (
+            <VideoCard key={project.id} project={project} index={i} />
           ))}
         </div>
       </div>

@@ -2,42 +2,80 @@ import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
 
+import aeLogo from '../../assets/ae.png';
+import capcutLogo from '../../assets/capcut.png';
+import davinciLogo from '../../assets/davinci.png';
+import finalcutLogo from '../../assets/finalcut.png';
+import vnLogo from '../../assets/vn.png';
+
+// Standalone floating software logos
 const floatingCards = [
   {
     id: 1,
-    src: 'https://images.unsplash.com/photo-1492691527719-9d1e07e534b4?w=400&q=75',
-    style: { top: '12%', left: '3%', width: '200px', height: '130px' },
+    name: 'Premiere Pro',
+    style: { top: '12%', left: '4%' },
     rotateX: 6, rotateY: -12, depth: -60, delay: 0.2,
+    logo: (
+      <svg width="68" height="68" viewBox="0 0 100 100" fill="none" className="drop-shadow-2xl">
+        <rect width="100" height="100" rx="24" fill="#00005B" />
+        <text x="50" y="68" fontSize="50" fontWeight="900" fill="#9999FF" textAnchor="middle" fontFamily="system-ui, sans-serif" letterSpacing="-2px">Pr</text>
+      </svg>
+    ),
   },
   {
     id: 2,
-    src: 'https://images.unsplash.com/photo-1516321497487-e288fb19713f?w=400&q=75',
-    style: { top: '55%', left: '1%', width: '170px', height: '110px' },
+    name: 'After Effects',
+    style: { top: '56%', left: '2%' },
     rotateX: -8, rotateY: 10, depth: -30, delay: 0.4,
+    logo: <img src={aeLogo} alt="After Effects" width="68" height="68" className="drop-shadow-2xl object-contain rounded-2xl" />,
   },
   {
     id: 3,
-    src: 'https://images.unsplash.com/photo-1574717024653-61fd2cf4d44d?w=400&q=75',
-    style: { top: '78%', left: '8%', width: '150px', height: '200px' },
+    name: 'DaVinci Resolve',
+    style: { top: '80%', left: '7%' },
     rotateX: 4, rotateY: -8, depth: -80, delay: 0.15,
+    logo: <img src={davinciLogo} alt="DaVinci Resolve" width="70" height="70" className="drop-shadow-2xl object-contain rounded-2xl" />,
   },
   {
     id: 4,
-    src: 'https://images.unsplash.com/photo-1536240478700-b869ad10a2eb?w=400&q=75',
-    style: { top: '8%', right: '4%', width: '190px', height: '120px' },
+    name: 'CapCut',
+    style: { top: '8%', right: '5%' },
     rotateX: -6, rotateY: 14, depth: -50, delay: 0.3,
+    logo: <img src={capcutLogo} alt="CapCut" width="68" height="68" className="drop-shadow-2xl object-contain rounded-2xl" />,
   },
   {
     id: 5,
-    src: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=400&q=75',
-    style: { top: '42%', right: '2%', width: '160px', height: '105px' },
+    name: 'VN Editor',
+    style: { top: '44%', right: '3%' },
     rotateX: 8, rotateY: -10, depth: -40, delay: 0.5,
+    logo: <img src={vnLogo} alt="VN Editor" width="68" height="68" className="drop-shadow-2xl object-contain rounded-2xl" />,
   },
   {
     id: 6,
-    src: 'https://images.unsplash.com/photo-1601412436009-d964bd02edbc?w=400&q=75',
-    style: { bottom: '10%', right: '6%', width: '180px', height: '240px' },
+    name: 'Final Cut Pro',
+    style: { bottom: '10%', right: '6%' },
     rotateX: -4, rotateY: 8, depth: -70, delay: 0.25,
+    logo: (
+      <svg width="74" height="74" viewBox="0 0 100 100" fill="none" className="drop-shadow-2xl">
+        <defs>
+          <linearGradient id="fcpRainbow" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stopColor="#30D158" />
+            <stop offset="25%" stopColor="#FFD60A" />
+            <stop offset="50%" stopColor="#FF453A" />
+            <stop offset="75%" stopColor="#BF5AF2" />
+            <stop offset="100%" stopColor="#0A84FF" />
+          </linearGradient>
+        </defs>
+        <g transform="rotate(-9 50 25)">
+          <rect x="14" y="14" width="72" height="16" rx="4" fill="#2C2C2E" />
+          <polygon points="20,14 30,30 22,30 12,14" fill="#E5E5EA" />
+          <polygon points="40,14 50,30 42,30 32,14" fill="#E5E5EA" />
+          <polygon points="60,14 70,30 62,30 52,14" fill="#E5E5EA" />
+        </g>
+        <rect x="14" y="32" width="72" height="54" rx="14" fill="#1C1C1E" stroke="#3A3A3C" strokeWidth="3" />
+        <rect x="18" y="36" width="64" height="46" rx="10" fill="url(#fcpRainbow)" />
+      </svg>
+    ),
   },
 ];
 
@@ -142,33 +180,21 @@ export default function Hero() {
       {/* Background ambient */}
       <div className="hero-bg-gradient" aria-hidden="true" />
 
-      {/* Floating Cards */}
+      {/* Standalone Floating Software Logos */}
       {!reducedMotion && floatingCards.map((card, i) => (
         <div
           key={card.id}
           ref={(el) => (cardsRef.current[i] = el)}
-          className="floating-card hidden lg:block"
+          className="floating-card hidden lg:block cursor-pointer transition-transform duration-300 hover:scale-115"
           style={{
             ...card.style,
             transformStyle: 'preserve-3d',
+            filter: 'drop-shadow(0 20px 40px rgba(0,0,0,0.65))',
           }}
-          aria-hidden="true"
+          aria-label={card.name}
+          title={card.name}
         >
-          <img
-            src={card.src}
-            alt=""
-            loading="lazy"
-            style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-          />
-          {/* Subtle overlay */}
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              background: 'linear-gradient(135deg, rgba(255,255,255,0.04) 0%, transparent 60%)',
-              borderRadius: 'inherit',
-            }}
-          />
+          {card.logo}
         </div>
       ))}
 
@@ -212,25 +238,12 @@ export default function Hero() {
           </span>
         </h1>
 
-        {/* Body */}
-        <p
-          ref={bodyRef}
-          className="text-body mx-auto mt-6 md:mt-8"
-          style={{
-            maxWidth: '480px',
-            opacity: 0,
-            fontSize: 'clamp(14px, 1.4vw, 16px)',
-            lineHeight: 1.8,
-          }}
-        >
-          Long-form, shorts and podcasts crafted for creators,<br className="hidden md:block" />
-          brands and ideas worth watching.
-        </p>
+
 
         {/* CTA */}
-        <div
+        {/* <div
           ref={ctaRef}
-          className="flex flex-wrap items-center justify-center gap-3 mt-10 md:mt-12"
+          className="flex flex-wrap items-center justify-center gap-3 mt-8 md:mt-12"
           style={{ opacity: 0 }}
         >
           <a
@@ -238,7 +251,7 @@ export default function Hero() {
             className="btn btn-primary"
             onClick={(e) => { e.preventDefault(); document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' }); }}
           >
-            Book a call
+            Contact Me
           </a>
           <a
             href="#work"
@@ -248,10 +261,10 @@ export default function Hero() {
             See the work
             <span style={{ display: 'inline-block', transform: 'translateX(0)', transition: 'transform 0.3s ease' }}>→</span>
           </a>
-        </div>
+        </div> */}
 
         {/* Scroll indicator */}
-        <div
+        {/* <div
           className="flex flex-col items-center gap-2 mt-16 md:mt-20"
           style={{ color: 'var(--text-tertiary)' }}
           aria-hidden="true"
@@ -264,7 +277,7 @@ export default function Hero() {
               animation: 'float-y 2s ease-in-out infinite',
             }}
           />
-        </div>
+        </div> */}
       </div>
     </section>
   );

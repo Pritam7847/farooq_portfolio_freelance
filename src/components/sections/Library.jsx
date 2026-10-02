@@ -1,31 +1,14 @@
 import { useEffect, useRef, useState } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { projects } from '../../data/projects';
+import { projects, shorts } from '../../data/projects';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const categories = ['All', 'Long form', 'Shorts', 'Podcasts', 'Brands'];
+const categories = ['All', 'Brand Film', 'Podcast', 'Brands', 'Shorts'];
 
-const allItems = [
-  ...projects,
-  {
-    id: 6, title: 'The Mindset Shift', client: 'Karan Hari', category: 'Podcasts',
-    duration: '58:20', views: '720K', year: '2024',
-    thumbnail: 'https://images.unsplash.com/photo-1478737270239-2f02b77fc618?w=800&q=75',
-  },
-  {
-    id: 7, title: 'Zero to Launch', client: 'MediaXcel', category: 'Brands',
-    duration: '4:10', views: '310K', year: '2024',
-    thumbnail: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=800&q=75',
-  },
-  {
-    id: 8, title: 'Street Frequencies', client: 'TechBurner', category: 'Shorts',
-    duration: '0:58', views: '6.2M', year: '2024',
-    thumbnail: 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=800&q=75',
-  },
-];
+const allItems = [...projects, ...shorts];
 
 export default function Library() {
   const [activeCategory, setActiveCategory] = useState('All');
@@ -116,15 +99,15 @@ export default function Library() {
             <div className="flex gap-10">
               <div>
                 <p className="font-sans font-light" style={{ fontSize: 'clamp(32px, 4vw, 52px)', letterSpacing: '-0.04em', color: 'var(--text-primary)' }}>
-                  300+
+                  6
                 </p>
-                <p className="metric-label" style={{ fontSize: '12px' }}>videos</p>
+                <p className="metric-label" style={{ fontSize: '12px' }}>featured videos</p>
               </div>
               <div>
                 <p className="font-sans font-light" style={{ fontSize: 'clamp(32px, 4vw, 52px)', letterSpacing: '-0.04em', color: 'var(--text-primary)' }}>
-                  40+
+                  300+
                 </p>
-                <p className="metric-label" style={{ fontSize: '12px' }}>creators</p>
+                <p className="metric-label" style={{ fontSize: '12px' }}>total edits</p>
               </div>
             </div>
           </div>
@@ -162,7 +145,7 @@ export default function Library() {
           <div
             className="relative xl:w-2/5 flex-shrink-0"
             style={{
-              height: 'clamp(300px, 40vw, 520px)',
+              height: 'clamp(340px, 42vw, 500px)',
               borderRadius: '16px',
               overflow: 'hidden',
               background: '#0d0d0d',
@@ -171,12 +154,24 @@ export default function Library() {
           >
             {visible[0] && (
               <>
-                <img
-                  src={visible[0].thumbnail}
-                  alt={visible[0].title}
-                  loading="lazy"
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                />
+                {visible[0].video ? (
+                  <video
+                    src={visible[0].video}
+                    poster={visible[0].thumbnail}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                ) : (
+                  <img
+                    src={visible[0].thumbnail}
+                    alt={visible[0].title}
+                    loading="lazy"
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                )}
                 <div style={{ position: 'absolute', inset: 0, background: 'linear-gradient(to top, rgba(0,0,0,0.8) 0%, transparent 60%)' }} />
 
                 {/* Orbital ring decoration */}
@@ -224,24 +219,36 @@ export default function Library() {
           {/* Grid right */}
           <div
             ref={gridRef}
-            className="grid grid-cols-2 lg:grid-cols-3 xl:grid-cols-2 gap-3 xl:gap-4 flex-1"
+            className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 xl:gap-5 flex-1"
           >
-            {visible.slice(1, 7).map((item, i) => (
+            {visible.slice(1).map((item, i) => (
               <div
                 key={`${item.id}-${activeCategory}`}
                 className="lib-card video-card glass-card-hover"
                 style={{
-                  height: 'clamp(140px, 16vw, 220px)',
-                  borderRadius: '12px',
+                  height: 'clamp(320px, 40vw, 480px)',
+                  borderRadius: '16px',
                   overflow: 'hidden',
                 }}
               >
-                <img
-                  src={item.thumbnail}
-                  alt={item.title}
-                  loading="lazy"
-                  style={{ width: '100%', height: '100%', objectFit: 'cover' }}
-                />
+                {item.video ? (
+                  <video
+                    src={item.video}
+                    poster={item.thumbnail}
+                    autoPlay
+                    loop
+                    muted
+                    playsInline
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                ) : (
+                  <img
+                    src={item.thumbnail}
+                    alt={item.title}
+                    loading="lazy"
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                )}
                 <div
                   style={{
                     position: 'absolute',

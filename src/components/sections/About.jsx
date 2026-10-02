@@ -2,6 +2,7 @@ import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { useReducedMotion } from '../../hooks/useReducedMotion';
+import farooq from '../../assets/farooq.jpeg'
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -72,7 +73,7 @@ export default function About() {
 
               <img
                 ref={portraitRef}
-                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=800&q=80"
+                src={farooq}
                 alt="Farooq Khan — Video Editor"
                 style={{
                   width: '100%',
@@ -141,7 +142,7 @@ export default function About() {
               style={{ opacity: reducedMotion ? 1 : 0 }}
             >
               I'm Farooq Khan — a video editor based in India, specialising in long-form YouTube content,
-              short-form reels, and podcast production. With 4+ years on the timeline and 300+ videos delivered,
+              short-form reels, and podcast production. With 1+ years on the timeline and 300+ videos delivered,
               I've helped creators and brands build audiences through sharp storytelling and precise editing.
             </p>
 
@@ -155,15 +156,15 @@ export default function About() {
 
             {/* Quick stats row */}
             <div
-              className="about-text-block grid grid-cols-3 gap-6 pt-8"
+              className="about-text-block grid grid-cols-3 gap-6 pt-8 mt-4"
               style={{
                 borderTop: '1px solid var(--border-subtle)',
                 opacity: reducedMotion ? 1 : 0,
               }}
             >
               {[
-                { num: '4+', label: 'Years editing' },
-                { num: '40+', label: 'Creators' },
+                { num: '1+', label: 'Years editing' },
+
                 { num: '300+', label: 'Videos' },
               ].map((stat) => (
                 <div key={stat.label}>
