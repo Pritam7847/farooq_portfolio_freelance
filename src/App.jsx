@@ -16,6 +16,7 @@ import Library from './components/sections/Library';
 import Process from './components/sections/Process';
 import About from './components/sections/About';
 import Contact from './components/sections/Contact';
+import BiryaniOverlay from './components/BiryaniOverlay'; // 🍛 REMOVE THIS LINE TO RESTORE SITE
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -32,6 +33,9 @@ export default function App() {
 
   return (
     <>
+      {/* 🍛 REMOVE THE NEXT LINE TO RESTORE SITE */}
+      <BiryaniOverlay />
+
       {/* Atmospheric overlays */}
       <div className="grain-overlay" aria-hidden="true" />
       <div className="vignette" aria-hidden="true" />
