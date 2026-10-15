@@ -6,9 +6,9 @@ import { useReducedMotion } from '../../hooks/useReducedMotion';
 gsap.registerPlugin(ScrollTrigger);
 
 const metrics = [
-  { number: '300', suffix: '+', label: 'videos delivered' },
-  { number: '4', suffix: '+', label: 'years on the timeline' },
-  { number: '1%', prefix: 'Top', label: 'editors in India' },
+  { number: '200', suffix: '+', label: 'videos delivered' },
+  { number: '2', suffix: '+', label: 'years on the timeline' },
+  { number: '1%', prefix: 'Top', label: 'Aim to be among editors in India' },
 ];
 
 function CountUp({ target, prefix = '', suffix = '', duration = 2 }) {

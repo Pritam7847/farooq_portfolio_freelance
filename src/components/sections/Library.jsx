@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
 import { projects, shorts } from '../../data/projects';
@@ -6,41 +6,14 @@ import { useReducedMotion } from '../../hooks/useReducedMotion';
 
 gsap.registerPlugin(ScrollTrigger);
 
-const categories = ['All', 'Brand Film', 'Podcast', 'Brands', 'Shorts'];
-
 const allItems = [...projects, ...shorts];
 
 export default function Library() {
-  const [activeCategory, setActiveCategory] = useState('All');
-  const [visible, setVisible] = useState(allItems);
   const sectionRef = useRef(null);
   const gridRef = useRef(null);
   const reducedMotion = useReducedMotion();
 
-  const filterItems = (cat) => {
-    if (reducedMotion) {
-      setActiveCategory(cat);
-      setVisible(cat === 'All' ? allItems : allItems.filter(i => i.category === cat));
-      return;
-    }
-
-    const newItems = cat === 'All' ? allItems : allItems.filter(i => i.category === cat);
-
-    // Animate out
-    gsap.to(gridRef.current?.querySelectorAll('.lib-card') || [], {
-      opacity: 0,
-      y: 20,
-      stagger: 0.04,
-      duration: 0.3,
-      ease: 'power2.in',
-      onComplete: () => {
-        setActiveCategory(cat);
-        setVisible(newItems);
-      },
-    });
-  };
-
-  // Animate in when visible changes
+  // Animate in cards on mount
   useEffect(() => {
     if (reducedMotion || !gridRef.current) return;
 
@@ -49,7 +22,7 @@ export default function Library() {
       { opacity: 0, y: 30 },
       { opacity: 1, y: 0, stagger: 0.06, duration: 0.7, ease: 'power4.out' }
     );
-  }, [visible, reducedMotion]);
+  }, [reducedMotion]);
 
   useEffect(() => {
     if (reducedMotion) return;
@@ -80,9 +53,9 @@ export default function Library() {
         <div className="lib-heading mb-12 md:mb-16" style={{ opacity: reducedMotion ? 1 : 0 }}>
           <div className="flex flex-col md:flex-row md:items-end justify-between gap-8">
             <div>
-              <p className="text-eyebrow mb-4">The full library</p>
+              {/* <p className="text-eyebrow mb-4">The full library</p> */}
               <h2
-                className="font-sans font-light"
+                className="font-sans font-light text-center"
                 style={{
                   fontSize: 'clamp(36px, 5vw, 72px)',
                   letterSpacing: '-0.04em',
@@ -90,13 +63,13 @@ export default function Library() {
                   color: 'var(--text-primary)',
                 }}
               >
-                Every cut.<br />
-                <span className="font-serif italic">Every story.</span>
+                Every cut,
+                <span className="font-serif italic"> Every story.</span>
               </h2>
             </div>
 
             {/* Stats */}
-            <div className="flex gap-10">
+            {/* <div className="flex gap-10">
               <div>
                 <p className="font-sans font-light" style={{ fontSize: 'clamp(32px, 4vw, 52px)', letterSpacing: '-0.04em', color: 'var(--text-primary)' }}>
                   6
@@ -109,36 +82,21 @@ export default function Library() {
                 </p>
                 <p className="metric-label" style={{ fontSize: '12px' }}>total edits</p>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
-
-        {/* Availability indicator + filters row */}
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-10">
-          {/* Open for projects */}
+        <br />
+        {/* Availability indicator */}
+        <div className="mb-10">
           <div
             className="flex items-center gap-2 pill-tag self-start"
             style={{ color: 'rgba(74,222,128,0.9)', borderColor: 'rgba(74,222,128,0.15)', background: 'rgba(74,222,128,0.05)' }}
           >
             <span className="status-dot" />
-            <span>Open for projects · 2025</span>
-          </div>
-
-          {/* Category filters */}
-          <div className="flex flex-wrap gap-2" role="group" aria-label="Filter by category">
-            {categories.map((cat) => (
-              <button
-                key={cat}
-                className={`filter-pill ${activeCategory === cat ? 'active' : ''}`}
-                onClick={() => filterItems(cat)}
-                aria-pressed={activeCategory === cat}
-              >
-                {cat}
-              </button>
-            ))}
+            <span>Open for projects · {new Date().getFullYear()}</span>
           </div>
         </div>
-
+        <br />
         {/* Orbital / Featured visual + Grid layout */}
         <div className="flex flex-col xl:flex-row gap-6">
           {/* Featured left */}
@@ -152,12 +110,12 @@ export default function Library() {
               border: '1px solid var(--border-subtle)',
             }}
           >
-            {visible[0] && (
+            {allItems[0] && (
               <>
-                {visible[0].video ? (
+                {allItems[0].video ? (
                   <video
-                    src={visible[0].video}
-                    poster={visible[0].thumbnail}
+                    src={allItems[0].video}
+                    poster={allItems[0].thumbnail}
                     autoPlay
                     loop
                     muted
@@ -166,8 +124,8 @@ export default function Library() {
                   />
                 ) : (
                   <img
-                    src={visible[0].thumbnail}
-                    alt={visible[0].title}
+                    src={allItems[0].thumbnail}
+                    alt={allItems[0].title}
                     loading="lazy"
                     style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                   />
@@ -206,10 +164,10 @@ export default function Library() {
                     className="font-sans font-light text-white"
                     style={{ fontSize: 'clamp(18px, 2.2vw, 28px)', letterSpacing: '-0.03em', lineHeight: 1.2 }}
                   >
-                    {visible[0].title}
+                    {allItems[0].title}
                   </h3>
                   <p className="text-eyebrow mt-2" style={{ color: 'rgba(255,255,255,0.4)' }}>
-                    {visible[0].client} · {visible[0].views} views
+                    {allItems[0].client} · {allItems[0].views} views
                   </p>
                 </div>
               </>
@@ -221,9 +179,9 @@ export default function Library() {
             ref={gridRef}
             className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4 xl:gap-5 flex-1"
           >
-            {visible.slice(1).map((item, i) => (
+            {allItems.slice(1).map((item) => (
               <div
-                key={`${item.id}-${activeCategory}`}
+                key={item.id}
                 className="lib-card video-card glass-card-hover"
                 style={{
                   height: 'clamp(320px, 40vw, 480px)',

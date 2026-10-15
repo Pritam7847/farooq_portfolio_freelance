@@ -188,7 +188,7 @@ export default function LongForm() {
         {/* Header */}
         <div className="longform-heading flex flex-col md:flex-row md:items-end justify-between gap-6 mb-12 md:mb-16" style={{ opacity: reducedMotion ? 1 : 0 }}>
           <div>
-            <p className="text-eyebrow mb-4">Selected Work</p>
+            {/* <p className="text-eyebrow mb-4">Selected Work</p> */}
             <h2
               className="font-sans font-light"
               style={{
@@ -198,18 +198,19 @@ export default function LongForm() {
                 color: 'var(--text-primary)',
               }}
             >
-              Stories built<br />
-              <span className="font-serif italic">to hold attention.</span>
+              Stories built
+              <span className="font-serif italic"> to hold attention.</span>
             </h2>
+            <br />
           </div>
-          <a
+          {/* <a
             href="#library"
             className="btn btn-secondary self-start md:self-auto"
             style={{ flexShrink: 0 }}
             onClick={(e) => { e.preventDefault(); document.getElementById('library')?.scrollIntoView({ behavior: 'smooth' }); }}
           >
             View all →
-          </a>
+          </a> */}
         </div>
 
         {/* Vertical 3-card grid */}

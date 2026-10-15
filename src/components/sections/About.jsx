@@ -141,8 +141,8 @@ export default function About() {
               className="text-body about-text-block mb-8"
               style={{ opacity: reducedMotion ? 1 : 0 }}
             >
-              I'm Farooq Khan — a video editor based in India, specialising in long-form YouTube content,
-              short-form reels, and podcast production. With 1+ years on the timeline and 300+ videos delivered,
+              I'm Md Farooq Khan, a video editor based in Patna, Bihar, India, specialising in long-form YouTube content,
+              short-form reels, and podcast production. With 2+ years on the timeline and 300+ videos delivered,
               I've helped creators and brands build audiences through sharp storytelling and precise editing.
             </p>
 
@@ -151,7 +151,7 @@ export default function About() {
               style={{ opacity: reducedMotion ? 1 : 0 }}
             >
               My approach is straightforward: understand the story first, then build the edit around it.
-              Great editing is invisible — it keeps people watching without them noticing why.
+              Great editing is invisible it keeps people watching without them noticing why.
             </p>
 
             {/* Quick stats row */}
@@ -163,7 +163,7 @@ export default function About() {
               }}
             >
               {[
-                { num: '1+', label: 'Years editing' },
+                { num: '2+', label: 'Years editing' },
 
                 { num: '300+', label: 'Videos' },
               ].map((stat) => (

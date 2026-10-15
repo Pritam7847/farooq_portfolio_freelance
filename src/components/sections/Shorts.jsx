@@ -9,8 +9,8 @@ gsap.registerPlugin(ScrollTrigger);
 // Fan card configurations for 3 videos
 const cardConfigs = [
   { rotate: -12, x: -180, y: 15, scale: 0.88, zIndex: 2 },
-  { rotate: 0,   x: 0,    y: 0,  scale: 1,    zIndex: 5 },
-  { rotate: 12,  x: 180,  y: 15, scale: 0.88, zIndex: 2 },
+  { rotate: 0, x: 0, y: 0, scale: 1, zIndex: 5 },
+  { rotate: 12, x: 180, y: 15, scale: 0.88, zIndex: 2 },
 ];
 
 function ShortCard({ short, config, index, isCenter, onHover, isHovered, isAnyHovered, onOpenModal }) {
@@ -485,7 +485,7 @@ export default function Shorts() {
         {/* Header */}
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-6 mb-16 md:mb-24">
           <div>
-            <p className="text-eyebrow mb-4">Shorts / Reels</p>
+            {/* <p className="text-eyebrow mb-4">Shorts / Reels</p> */}
             <h2
               className="font-sans font-light"
               style={{
@@ -495,16 +495,16 @@ export default function Shorts() {
                 color: 'var(--text-primary)',
               }}
             >
-              Shorts that stop<br />
-              <span className="font-serif italic">the scroll.</span>
+              Shorts that stop
+              <span className="font-serif italic"> the scroll.</span>
             </h2>
           </div>
-          <p
+          {/* <p
             className="text-body"
             style={{ maxWidth: '320px', fontSize: 'clamp(13px, 1.3vw, 15px)' }}
           >
             Hooks in the first second. Captions that carry the rhythm. Cuts timed to the beat.
-          </p>
+          </p> */}
         </div>
 
         {/* Fan container */}
@@ -552,9 +552,9 @@ export default function Shorts() {
           style={{ borderTop: '1px solid var(--border-subtle)' }}
         >
           {[
-            { number: '15M+', label: 'Total short views' },
+            { number: '20K +', label: 'Total short views' },
             { number: '50+', label: 'Shorts delivered' },
-            { number: '4.8M', label: 'Best performing short' },
+            { number: '4.8K', label: 'Best performing short' },
           ].map((stat, i) => (
             <div key={i} className="text-center">
               <p
